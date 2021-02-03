@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.thorntail</groupId>
         <artifactId>parent</artifactId>
-        <version>11</version>
+        <version>12</version>
     </parent>
 
     <groupId>io.thorntail.openshift-test</groupId>
