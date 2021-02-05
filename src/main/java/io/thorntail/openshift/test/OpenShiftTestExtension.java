@@ -467,8 +467,15 @@ final class OpenShiftTestExtension implements BeforeAllCallback, AfterAllCallbac
                 ? injectionPoint.getAnnotation(WithName.class).value()
                 : getAllAppsMetadata(context).requireSingle().name;
 
+        String namespace = injectionPoint.isAnnotationPresent(WithName.class)
+                ? injectionPoint.getAnnotation(WithName.class).inNamespace()
+                : null;
+        if (WithName.CURRENT_NAMESPACE.equals(namespace)) {
+            namespace = null;
+        }
+
         DiscoveryUtil discovery = getDiscoveryUtil(context);
-        return discovery.getRouteUrl(routeName)
+        return discovery.getRouteUrl(routeName, namespace)
                 .orElseThrow(() -> new OpenShiftTestException("Missing route " + routeName));
     }
 

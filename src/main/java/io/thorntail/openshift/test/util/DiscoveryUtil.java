@@ -73,7 +73,11 @@ public final class DiscoveryUtil {
 
 
     public Optional<String> getRouteUrl(String routeName) {
-        Route route = oc.routes().withName(routeName).get();
+        return getRouteUrl(routeName, null);
+    }
+
+    public Optional<String> getRouteUrl(String routeName, String namespace) {
+        Route route = oc.routes().inNamespace(namespace).withName(routeName).get();
         if (route == null) {
             return Optional.empty();
         }
