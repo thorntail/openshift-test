@@ -12,5 +12,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WithName {
+    String CURRENT_NAMESPACE = "<<current namespace>>";
+
     String value() default "";
+
+    String inNamespace() default CURRENT_NAMESPACE;
 }
