@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * The {@code oc} binary needs to be present on {@code PATH}, as the test framework uses it.
  * <p>
  * Before running the tests in this class, the test application is deployed. It is expected that the resources
- * to be deployed are found in {@code target/classes/META-INFjkube/openshift.yml}. After the tests in this class
+ * to be deployed are found in {@code target/classes/META-INF/jkube/openshift.yml}. After the tests in this class
  * finish, the application is undeployed.
  * <p>
  * The {@link ManualApplicationDeployment @ManualApplicationDeployment} and
