@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * If the test class is annotated {@code CustomAppMetadata}, then the annotation is used as a source
  * of {@link AppMetadata} for the test and known applications are not read from
- * {@code target/classes/META-INFjkube/openshift.yml}. Note that this annotation is repeatable.
+ * {@code target/classes/META-INF/jkube/openshift.yml}. Note that this annotation is repeatable.
  *
  * @see ManualApplicationDeployment
  */
