@@ -15,6 +15,11 @@ import java.util.function.Function;
 
 // TODO some code duplication between AllAppsMetadataReader and DiscoveryUtil
 final class AllAppsMetadataReader {
+    // TODO Thorntail-specific
+    private static final String HEALTH = "/health";
+    private static final String HEALTH_LIVE = "/health/live";
+    private static final String HEALTH_READY = "/health/ready";
+
     private final OpenShiftClient oc;
 
     AllAppsMetadataReader(OpenShiftClient oc) {
@@ -51,12 +56,12 @@ final class AllAppsMetadataReader {
     private static String findKnownEndpoint(PodTemplateSpec podTemplate) {
         String knownEndpoint = findHttpPathForProbe(podTemplate, Container::getReadinessProbe);
         if (knownEndpoint != null) {
-            return knownEndpoint;
+            return HEALTH.equals(knownEndpoint) ? HEALTH_READY : knownEndpoint;
         }
 
         knownEndpoint = findHttpPathForProbe(podTemplate, Container::getLivenessProbe);
         if (knownEndpoint != null) {
-            return knownEndpoint;
+            return HEALTH.equals(knownEndpoint) ? HEALTH_LIVE : knownEndpoint;
         }
 
         return "/";
