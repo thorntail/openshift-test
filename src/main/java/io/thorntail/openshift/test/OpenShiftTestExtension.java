@@ -150,11 +150,13 @@ final class OpenShiftTestExtension implements BeforeAllCallback, AfterAllCallbac
 
         createEphemeralNamespaceIfNecessary(context);
 
-        deployAdditionalResources(context);
+        if (AutomaticAppDeployment.isEnabled()) {
+            deployAdditionalResources(context);
 
-        runPublicStaticVoidMethods(CustomizeApplicationDeployment.class, context);
+            runPublicStaticVoidMethods(CustomizeApplicationDeployment.class, context);
+        }
 
-        if (!getManualDeploymentAnnotation(context).isPresent()) {
+        if (AutomaticAppDeployment.isEnabled() && !getManualDeploymentAnnotation(context).isPresent()) {
             Path yaml = getResourcesYaml();
             if (!Files.exists(yaml)) {
                 throw new OpenShiftTestException("Missing " + yaml);
@@ -319,15 +321,20 @@ final class OpenShiftTestExtension implements BeforeAllCallback, AfterAllCallbac
         if (getManualDeploymentAnnotation(context).isPresent()) {
             shouldUndeployApplication = false;
         }
+        if (AutomaticAppDeployment.isDisabled()) {
+            shouldUndeployApplication = false;
+        }
 
         if (shouldUndeployApplication) {
             System.out.println("undeploying application");
             new Command("oc", "delete", "-f", getResourcesYaml().toString(), "--ignore-not-found").runAndWait();
         }
 
-        // TODO not yet clear if this method should be invoked (or not) in presence of ephemeral namespaces,
-        //  test failures, or retain on failure
-        runPublicStaticVoidMethods(CustomizeApplicationUndeployment.class, context);
+        if (AutomaticAppDeployment.isEnabled()) {
+            // TODO not yet clear if this method should be invoked (or not) in presence of ephemeral namespaces,
+            //  test failures, or retain on failure
+            runPublicStaticVoidMethods(CustomizeApplicationUndeployment.class, context);
+        }
 
         dropEphemeralNamespaceIfNecessary(context);
     }
