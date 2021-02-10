@@ -186,3 +186,9 @@ That especially means that the `target/classes/META-INF/jkube/openshift.yml` fil
 (Unless `@CustomAppMetadata` is used.)
 
 Combination with `@ManualApplicationDeployment` or `-Dts.use-ephemeral-namespaces` doesn't make much sense, but isn't detected or prevented.
+
+### Default timeout
+
+When the test framework needs to await something, such as deployment readiness, it uses a default timeout of 5 minutes.
+If you want to change that value, you can use `-Dts.default-timeout` to override the default value.
+The unit is minutes, so e.g. `-Dts.default-timeout=10` means default timeout of 10 minutes.

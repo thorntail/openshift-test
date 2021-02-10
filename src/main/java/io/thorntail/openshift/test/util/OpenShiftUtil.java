@@ -3,6 +3,7 @@ package io.thorntail.openshift.test.util;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.fabric8.openshift.client.internal.readiness.OpenShiftReadiness;
+import io.thorntail.openshift.test.DefaultTimeout;
 import io.thorntail.openshift.test.OpenShiftTestException;
 
 import java.io.File;
@@ -63,7 +64,7 @@ public final class OpenShiftUtil {
         System.out.println(ansi().a("waiting for ").fgYellow().a(deploymentConfigName).reset()
                 .a(" to have exactly ").fgYellow().a(expectedReplicas).reset().a(" ready replica(s)"));
 
-        await().atMost(5, TimeUnit.MINUTES).until(() -> {
+        await().atMost(DefaultTimeout.getMinutes(), TimeUnit.MINUTES).until(() -> {
             // ideally, we'd look at deployment config's status.availableReplicas field,
             // but that's only available since OpenShift 3.5
             List<Pod> pods = listPodsForDeploymentConfig(deploymentConfigName);
