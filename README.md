@@ -169,3 +169,20 @@ We actually edit the Kubernetes resources on a few specific places (such as cont
 This currently works automatically for the `target/classes/META-INF/jkube/openshift.yml` file and all the files deployed with `@AdditionalResources`.
 
 Note that it is usually a good idea to set `-Dts.image-overrides` to a _full_ path, because when building multi-module projects, Maven changes the current working directory for each individual module.
+
+### Skipping deployment
+
+Sometimes, you want to run a test against applications that are already deployed (e.g. using S2I).
+In other words, you want to skip the automatic application deployment process the test framework runs.
+
+In such case, you can use `-Dts.skip-deployment`, and the test framework will _not_:
+
+- run `oc apply -f target/classes/META-INF/jkube/openshift.yml` (and the corresponding `oc delete`);
+- deploy (and undeploy) `@AdditionalResources`;
+- run `@CustomizeApplicationDeployment` and `@CustomizeApplicationUndeployment` methods.
+
+Note that everything else stays intact.
+That especially means that the `target/classes/META-INF/jkube/openshift.yml` file must still exist and contain all the deployed applications.
+(Unless `@CustomAppMetadata` is used.)
+
+Combination with `@ManualApplicationDeployment` or `-Dts.use-ephemeral-namespaces` doesn't make much sense, but isn't detected or prevented.
