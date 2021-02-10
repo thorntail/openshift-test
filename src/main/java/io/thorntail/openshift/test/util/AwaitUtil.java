@@ -7,6 +7,7 @@ import io.fabric8.openshift.client.OpenShiftClient;
 import io.fabric8.openshift.client.internal.readiness.OpenShiftReadiness;
 import io.thorntail.openshift.test.AllAppsMetadata;
 import io.thorntail.openshift.test.AppMetadata;
+import io.thorntail.openshift.test.DefaultTimeout;
 import io.thorntail.openshift.test.OpenShiftTestException;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public final class AwaitUtil {
 
     public void awaitImageStream(String imageStream) {
         System.out.println(ansi().a("waiting for image stream ").fgYellow().a(imageStream).reset().a(" to populate"));
-        await().atMost(5, TimeUnit.MINUTES).until(imageStreamHasTags(oc, imageStream));
+        await().atMost(DefaultTimeout.getMinutes(), TimeUnit.MINUTES).until(imageStreamHasTags(oc, imageStream));
     }
 
     private static Callable<Boolean> imageStreamHasTags(OpenShiftClient oc, String imageStream) {
@@ -62,7 +63,7 @@ public final class AwaitUtil {
 
         System.out.println(ansi().a("waiting for route ").fgYellow().a(name).reset()
                 .a(" to start responding at ").fgYellow().a(knownEndpoint.get()).reset());
-        await().ignoreExceptions().atMost(5, TimeUnit.MINUTES).untilAsserted(() -> {
+        await().ignoreExceptions().atMost(DefaultTimeout.getMinutes(), TimeUnit.MINUTES).untilAsserted(() -> {
             given()
                     .baseUri(baseUrl.get())
                     .basePath(knownEndpoint.get())
@@ -81,7 +82,7 @@ public final class AwaitUtil {
                     System.out.println(ansi().a("waiting for ").a(readableKind(it.getKind())).a(" ")
                             .fgYellow().a(it.getMetadata().getName()).reset().a(" to become ready"));
                     await().pollInterval(1, TimeUnit.SECONDS)
-                            .atMost(5, TimeUnit.MINUTES)
+                            .atMost(DefaultTimeout.getMinutes(), TimeUnit.MINUTES)
                             .until(() -> {
                                 HasMetadata current = oc.resource(it).fromServer().get();
                                 if (current == null) {
