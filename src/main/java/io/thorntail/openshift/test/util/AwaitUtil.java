@@ -4,7 +4,6 @@ import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.Handlers;
 import io.fabric8.kubernetes.client.ResourceHandler;
 import io.fabric8.openshift.client.OpenShiftClient;
-import io.fabric8.openshift.client.internal.readiness.OpenShiftReadiness;
 import io.thorntail.openshift.test.AllAppsMetadata;
 import io.thorntail.openshift.test.AppMetadata;
 import io.thorntail.openshift.test.DefaultTimeout;
@@ -77,7 +76,7 @@ public final class AwaitUtil {
     public void awaitReadiness(List<HasMetadata> resources) {
         resources.stream()
                 .filter(Objects::nonNull)
-                .filter(it -> OpenShiftReadiness.isReadinessApplicable(it.getClass()))
+                .filter(ReadinessUtil::isReadinessApplicable)
                 .forEach(it -> {
                     System.out.println(ansi().a("waiting for ").a(readableKind(it.getKind())).a(" ")
                             .fgYellow().a(it.getMetadata().getName()).reset().a(" to become ready"));
@@ -96,7 +95,7 @@ public final class AwaitUtil {
                                     throw new OpenShiftTestException("Couldn't load " + readableKind(it.getKind()) + " '"
                                             + it.getMetadata().getName() + "' from API server");
                                 }
-                                return OpenShiftReadiness.isReady(current);
+                                return ReadinessUtil.isReady(current);
                             });
                 });
     }
