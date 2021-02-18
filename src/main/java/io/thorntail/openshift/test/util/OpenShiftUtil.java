@@ -2,7 +2,6 @@ package io.thorntail.openshift.test.util;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.openshift.client.OpenShiftClient;
-import io.fabric8.openshift.client.internal.readiness.OpenShiftReadiness;
 import io.thorntail.openshift.test.DefaultTimeout;
 import io.thorntail.openshift.test.OpenShiftTestException;
 
@@ -69,7 +68,7 @@ public final class OpenShiftUtil {
             // but that's only available since OpenShift 3.5
             List<Pod> pods = listPodsForDeploymentConfig(deploymentConfigName);
             try {
-                return pods.size() == expectedReplicas && pods.stream().allMatch(OpenShiftReadiness::isPodReady);
+                return pods.size() == expectedReplicas && pods.stream().allMatch(ReadinessUtil::isReady);
             } catch (IllegalStateException e) {
                 // the 'Ready' condition can be missing sometimes, in which case Readiness.isPodReady throws an exception
                 // here, we'll swallow that exception in hope that the 'Ready' condition will appear later
@@ -83,7 +82,7 @@ public final class OpenShiftUtil {
 
         int number = 0;
         for (Pod pod : pods) {
-            if (OpenShiftReadiness.isPodReady(pod)) {
+            if (ReadinessUtil.isReady(pod)) {
                 number++;
             }
         }
