@@ -24,7 +24,7 @@
         <version.awaitility>4.1.0</version.awaitility>
         <version.fabric8-openshift-client>5.3.1</version.fabric8-openshift-client>
         <version.fusesource-jansi>2.3.2</version.fusesource-jansi>
-        <version.junit-jupiter>5.7.1</version.junit-jupiter>
+        <version.junit-jupiter>5.7.2</version.junit-jupiter>
         <version.rest-assured>4.3.3</version.rest-assured>
     </properties>
 
